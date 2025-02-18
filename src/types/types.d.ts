@@ -1,19 +1,22 @@
+import ExampleWithError from "../classes/ExampleWithError";
+import CustomLog from "../traits/customLog";
+
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
-interface ResolveInsteadOf {
-    class: string;
-    method: string;
+export interface ResolveInsteadOf {
+    className: string;
+    methodName: string;
     otherClasses: string[];
 }
 
-interface ResolveAs {
-    class: string;
-    method: string;
+export interface ResolveAs {
+    className: string;
+    methodName: string;
     newMethodName: string;
 }
 
 export interface Settings {
-    resolve?: ResolveInsteadOf | ResolveAs[];
+    resolve?: Array<ResolveInsteadOf | ResolveAs>;
     showWarnings?: boolean;
 }
 
@@ -22,3 +25,7 @@ export interface ExampleDTO {
 }
 
 export type ExampleInstanceType = Example & Logger & Serializable;
+
+export type ExampleWithErrorInstanceType = ExampleWithError & Logger & CustomLog;
+
+export type ExampleWithResolveInstanceType = ExampleWIthResolve & Logger & CustomLog;
