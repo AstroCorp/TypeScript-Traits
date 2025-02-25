@@ -1,4 +1,4 @@
-import { Constructor, ResolveAs, ResolveInsteadOf, Settings } from "../types/types";
+import { Constructor, ResolveAs, ResolveInsteadOf, Settings } from "./types/types";
 
 const hasOwnProperty = (target: Constructor, methodName: string, deep: boolean): boolean => {
     let currentTarget = target;

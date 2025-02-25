@@ -1,4 +1,4 @@
-import ApplyTraits from "../../../utils/applyTraits";
+import ApplyTraits from "../../../applyTraits";
 import PriorityLogger from "../traits/PriorityLogger";
 import { PriorityExample1DTO, PriorityExample1InstanceType } from "../types/types";
 import PriorityBase from "./PriorityBase";
