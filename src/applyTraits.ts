@@ -90,6 +90,8 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                             if (traitName !== className) {
                                 conflictStatus = 'ignore';
                             }
+
+                            console.log('>>>> ' + methodName + ' | ' + traitName + ' -> ' + conflictStatus);
                         }
 
                         // ResolveAs
@@ -107,6 +109,8 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                 if (appliedMethods.has(traitMethodName) && conflictStatus !== 'ignore') {
                     throw new Error(`Method "${traitMethodName}" already applied from trait "${appliedMethods.get(traitMethodName)}"`);
                 }
+
+                console.log('<<<<<<< ' + traitMethodName + ' | ' + Trait.name);
 
                 appliedMethods.set(traitMethodName, Trait.name);
 
