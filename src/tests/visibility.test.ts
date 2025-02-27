@@ -1,4 +1,4 @@
-describe('Visibility Modification', () => {
+describe.skip('Visibility Modification', () => {
     test('should allow modifying method visibility when importing trait', () => {
         // TODO: Implement test
     });

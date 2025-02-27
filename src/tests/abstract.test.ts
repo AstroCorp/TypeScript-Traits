@@ -1,4 +1,4 @@
-describe('Abstract Methods in Traits', () => {
+describe.skip('Abstract Methods in Traits', () => {
     test('should require implementation of abstract methods', () => {
         // TODO: Implement test
     });

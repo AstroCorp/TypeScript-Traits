@@ -90,8 +90,6 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                             if (traitName !== className) {
                                 conflictStatus = 'ignore';
                             }
-
-                            console.log('>>>> ' + methodName + ' | ' + traitName + ' -> ' + conflictStatus);
                         }
 
                         // ResolveAs
@@ -103,22 +101,23 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                                 conflictStatus = 'replace';
                             }
                         }
-                    });
+                    })
 
                 // Si el método ya se ha aplicado desde otro trait, lanzamos un error.
                 if (appliedMethods.has(traitMethodName) && conflictStatus !== 'ignore') {
                     throw new Error(`Method "${traitMethodName}" already applied from trait "${appliedMethods.get(traitMethodName)}"`);
                 }
 
-                console.log('<<<<<<< ' + traitMethodName + ' | ' + Trait.name);
-
                 appliedMethods.set(traitMethodName, Trait.name);
 
-                Object.defineProperty(
-                    Base.prototype,
-                    traitMethodName,
-                    Object.getOwnPropertyDescriptor(Trait.prototype, traitMethodName) || Object.create(null)
-                );
+                // Solo aplicamos el método si no se ha ignorado durante la resolución de conflictos.
+                if (conflictStatus !== 'ignore') {
+                    Object.defineProperty(
+                        Base.prototype,
+                        traitMethodName,
+                        Object.getOwnPropertyDescriptor(Trait.prototype, traitMethodName) || Object.create(null)
+                    );
+                }
             });
         });
 

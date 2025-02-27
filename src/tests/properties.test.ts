@@ -1,4 +1,4 @@
-describe('Properties in Traits', () => {
+describe.skip('Properties in Traits', () => {
     test('should not allow redefining trait property with different visibility', () => {
         // TODO: Implement test
     });

@@ -1,4 +1,4 @@
-describe('Static Elements in Traits', () => {
+describe.skip('Static Elements in Traits', () => {
     test('should support static methods', () => {
         // TODO: Implement test
     });
