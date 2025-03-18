@@ -9,12 +9,10 @@ import { ConflictsFixedDTO, ConflictsFixedInstanceType } from "../types/types";
         {
             methodName: 'log',
             className: 'ConflictsLogger',
-            otherClasses: ['ConflictsDebugger'],
         },
         {
             methodName: 'debug',
             className: 'ConflictsDebugger',
-            otherClasses: ['ConflictsExceptions'],
         },
     ],
 }, ConflictsLogger, ConflictsDebugger, ConflictsExceptions)

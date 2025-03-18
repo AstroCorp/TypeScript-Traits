@@ -21,23 +21,15 @@ const hasOwnProperty = (target: Constructor, methodName: string, deep: boolean):
 
 const validateResolve = (resolve: Array<ResolveInsteadOf | ResolveAs>) => {
     // Comprobamos que no haya dos reglas para el mismo método
-    const appliedMethods = new Map<string, string[]>();
+    const appliedMethods = new Map<string, number>();
 
     resolve.forEach((rule) => {
-        if (!appliedMethods.has(rule.methodName)) {
-            appliedMethods.set(rule.methodName, []);
-        }
-        
-        const formatedRule = 'otherClasses' in rule
-            ? `${rule.className}::${rule.methodName} instead of ${rule.otherClasses.join(', ')}`
-            : `${rule.className}::${rule.methodName} as ${rule.newMethodName}`;
-
-        appliedMethods.get(rule.methodName)?.push(formatedRule);
+        appliedMethods.set(rule.methodName, (appliedMethods.get(rule.methodName) ?? 0) + 1);
     });
 
     for (const [methodName, rules] of appliedMethods.entries()) {
-        if (rules.length > 1) {
-            throw new Error(`Conflicts found in conflict resolution for method "${methodName}": ${rules.join(', ')}`);
+        if (rules > 1) {
+            throw new Error(`Multiple conflict resolution rules found for method "${methodName}". Please ensure there are no duplicate rules defined.`);
         }
     }
 }
@@ -78,43 +70,27 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                 }
 
                 // Comprobamos el listado de resolución de conflictos.
-                let conflictStatus = 'merge';
-
-                resolve
-                    .filter((conflictResolution) => conflictResolution.methodName === traitMethodName)
-                    .forEach((conflictResolution) => {
-                        // ResolveInsteadOf
-                        if ('otherClasses' in conflictResolution) {
-                            const { className, methodName, otherClasses } = conflictResolution;
-
-                            if (traitName !== className) {
-                                conflictStatus = 'ignore';
-                            }
-                        }
-
-                        // ResolveAs
-                        if ('newMethodName' in conflictResolution) {
-                            const { className, methodName, newMethodName } = conflictResolution;
-
-                            if (traitName === className) {
-                                traitMethodName = newMethodName;
-                                conflictStatus = 'replace';
-                            }
-                        }
-                    })
+                // Add -> Añadimos el método si no tiene resolución de conflictos o si la resolución determina que se debe añadir.
+                // Rename -> Renombramos el método si en la resolución se indica que se debe renombrar.
+                // Ignore -> Aquellos métodos que no sigan ninguna de las dos anteriores.
+                const conflictResolution = resolve.find((conflictResolution) => conflictResolution.methodName === traitMethodName);
+                const isRenameResolution = conflictResolution && 'newMethodName' in conflictResolution && conflictResolution.className === traitName && conflictResolution.methodName === traitMethodName;
+                const isAddMethod = !conflictResolution || (!isRenameResolution && conflictResolution.className === traitName && conflictResolution.methodName === traitMethodName);
 
                 // Si el método ya se ha aplicado desde otro trait, lanzamos un error.
-                if (appliedMethods.has(traitMethodName) && conflictStatus !== 'ignore') {
+                if (appliedMethods.has(traitMethodName) && isAddMethod) {
                     throw new Error(`Method "${traitMethodName}" already applied from trait "${appliedMethods.get(traitMethodName)}"`);
                 }
 
                 appliedMethods.set(traitMethodName, Trait.name);
 
                 // Solo aplicamos el método si no se ha ignorado durante la resolución de conflictos.
-                if (conflictStatus !== 'ignore') {
+                if (isAddMethod || isRenameResolution) {
+                    const methodName = isRenameResolution ? conflictResolution.newMethodName : traitMethodName;
+
                     Object.defineProperty(
                         Base.prototype,
-                        traitMethodName,
+                        methodName,
                         Object.getOwnPropertyDescriptor(Trait.prototype, traitMethodName) || Object.create(null)
                     );
                 }
