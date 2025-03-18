@@ -94,6 +94,10 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                         Object.getOwnPropertyDescriptor(Trait.prototype, traitMethodName) || Object.create(null)
                     );
                 }
+
+                if (!isAddMethod && !isRenameResolution && showWarnings) {
+                    console.warn(`Method ${traitMethodName} not applied from trait ${Trait.name}`);
+                }
             });
         });
 
