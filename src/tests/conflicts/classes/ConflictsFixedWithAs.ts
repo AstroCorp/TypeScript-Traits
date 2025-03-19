@@ -7,16 +7,21 @@ import { ConflictsFixedDTO, ConflictsFixedInstanceType } from "../types/types";
 @ApplyTraits({
     resolve: [
         {
-            methodName: 'log',
             className: 'ConflictsLogger',
+            methodName: 'log',
         },
         {
-            methodName: 'debug',
             className: 'ConflictsDebugger',
+            methodName: 'debug',
+        },
+        {
+            className: 'ConflictsExceptions',
+            methodName: 'debug',
+            newMethodName: 'debugRenamed',
         },
     ],
 }, ConflictsLogger, ConflictsDebugger, ConflictsExceptions)
-class ConflictsFixed {
+class ConflictsFixedWithAs {
     name: string;
 
     constructor(dto: ConflictsFixedDTO) {
@@ -28,8 +33,8 @@ class ConflictsFixed {
     }
 
     static create(dto: ConflictsFixedDTO) {
-        return new ConflictsFixed(dto).Instance;
+        return new ConflictsFixedWithAs(dto).Instance;
     }
 }
 
-export default ConflictsFixed;
+export default ConflictsFixedWithAs;

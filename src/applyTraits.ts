@@ -24,7 +24,8 @@ const validateResolve = (resolve: Array<ResolveInsteadOf | ResolveAs>) => {
     const appliedMethods = new Map<string, number>();
 
     resolve.forEach((rule) => {
-        appliedMethods.set(rule.methodName, (appliedMethods.get(rule.methodName) ?? 0) + 1);
+        const methodName = 'newMethodName' in rule ? rule.newMethodName : rule.methodName;
+        appliedMethods.set(methodName, (appliedMethods.get(methodName) ?? 0) + 1);
     });
 
     for (const [methodName, rules] of appliedMethods.entries()) {
@@ -73,29 +74,29 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                 // Add -> Añadimos el método si no tiene resolución de conflictos o si la resolución determina que se debe añadir.
                 // Rename -> Renombramos el método si en la resolución se indica que se debe renombrar.
                 // Ignore -> Aquellos métodos que no sigan ninguna de las dos anteriores.
-                const conflictResolution = resolve.find((conflictResolution) => conflictResolution.methodName === traitMethodName);
-                const isRenameResolution = conflictResolution && 'newMethodName' in conflictResolution && conflictResolution.className === traitName && conflictResolution.methodName === traitMethodName;
-                const isAddMethod = !conflictResolution || (!isRenameResolution && conflictResolution.className === traitName && conflictResolution.methodName === traitMethodName);
+                const conflictResolution = resolve.find((conflictResolution) => conflictResolution.methodName === traitMethodName && conflictResolution.className === traitName) 
+                    ?? resolve.find((conflictResolution) => conflictResolution.methodName === traitMethodName);
+                const isRenameResolution = conflictResolution && ('newMethodName' in conflictResolution) && conflictResolution.className === traitName && conflictResolution.methodName === traitMethodName;
+                const isAddResolution = !conflictResolution || (!isRenameResolution && conflictResolution.className === traitName && conflictResolution.methodName === traitMethodName);
+                const methodName = (isRenameResolution ? conflictResolution.newMethodName : traitMethodName) as string;
 
                 // Si el método ya se ha aplicado desde otro trait, lanzamos un error.
-                if (appliedMethods.has(traitMethodName) && isAddMethod) {
-                    throw new Error(`Method "${traitMethodName}" already applied from trait "${appliedMethods.get(traitMethodName)}"`);
+                if (appliedMethods.has(methodName) && isAddResolution) {
+                    throw new Error(`Method "${methodName}" already applied from trait "${appliedMethods.get(methodName)}"`);
                 }
 
-                appliedMethods.set(traitMethodName, Trait.name);
-
                 // Solo aplicamos el método si no se ha ignorado durante la resolución de conflictos.
-                if (isAddMethod || isRenameResolution) {
-                    const methodName = isRenameResolution ? conflictResolution.newMethodName : traitMethodName;
-
+                if (isAddResolution || isRenameResolution) {
                     Object.defineProperty(
                         Base.prototype,
                         methodName,
                         Object.getOwnPropertyDescriptor(Trait.prototype, traitMethodName) || Object.create(null)
                     );
+
+                    appliedMethods.set(methodName, Trait.name);
                 }
 
-                if (!isAddMethod && !isRenameResolution && showWarnings) {
+                if (!isAddResolution && !isRenameResolution && showWarnings) {
                     console.warn(`Method ${traitMethodName} not applied from trait ${Trait.name}`);
                 }
             });
