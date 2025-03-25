@@ -12,7 +12,7 @@ experimentalDecorators, emitDecoratorMetadata.
 - Si 2 traits crean una misma función da error fatal, tenemos que indicar cual usar
 - Al importar un trait podemos modificar la visibilidad del método, parecido a lo anterior
 - Podemos crear un trait fusionando otros traits
-- Los traits puede tener un método abstract
+- Los traits puede tener un método abstract (No se puede aplicar en js, ya que no existe el concepto de abstract en js)
 - Los traits pueden tener métodos y variables estáticas
 - Si un trait define una propiedad, una clase no puede definir una propiedad con el mismo nombre, a menos que sea compatible (misma visibilidad y mismo valor inicial), si no, se emitirá un error fatal.
 
