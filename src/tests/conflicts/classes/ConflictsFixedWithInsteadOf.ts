@@ -2,7 +2,7 @@ import ApplyTraits from "../../../applyTraits";
 import ConflictsLogger from "../traits/ConflictsLogger";
 import ConflictsDebugger from "../traits/ConflictsDebugger";
 import ConflictsExceptions from "../traits/ConflictsExceptions";
-import { ConflictsFixedDTO, ConflictsFixedInstanceType } from "../types/types";
+import { ConflictsFixedDTO, ConflictsFixedWithInsteadOfInstanceType } from "../types/types";
 
 @ApplyTraits({
     resolve: [
@@ -24,7 +24,7 @@ class ConflictsFixedWithInsteadOf {
     }
 
     get Instance() {
-        return this as unknown as ConflictsFixedInstanceType;
+        return this as unknown as ConflictsFixedWithInsteadOfInstanceType;
     }
 
     static create(dto: ConflictsFixedDTO) {
