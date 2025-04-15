@@ -47,6 +47,15 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
             const traitName = Trait.name;
             const traitMethods = Object.getOwnPropertyNames(Trait.prototype);
 
+            const traitMethodsDescriptors = Object.getOwnPropertyDescriptors(Trait.prototype);
+            Object.keys(traitMethodsDescriptors).forEach((methodName) => {
+                const descriptor = traitMethodsDescriptors[methodName];
+                if (descriptor.value) {
+                    console.log(methodName, descriptor.value.toString());
+                }
+            });
+            console.log('--------------------------------');
+
             traitMethods.forEach((traitMethodName) => {
                 if (traitMethodName === 'constructor') return;
 
