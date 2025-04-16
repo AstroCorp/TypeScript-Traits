@@ -35,6 +35,16 @@ const validateResolve = (resolve: Array<ResolveInsteadOf | ResolveAs>) => {
     }
 }
 
+const getMethodInfo = (descriptorValue: string) => {
+    const methodSignature = descriptorValue.slice(0, descriptorValue.indexOf(')') + 1);
+    const params = methodSignature.slice(methodSignature.indexOf('(') + 1, methodSignature.indexOf(')'))
+        .split(',')
+        .map((param) => param.trim())
+        .filter((param) => param.length > 0);
+
+    console.log(methodSignature, params);
+}
+
 const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: Constructor[]): <T extends TBase>(Base: T) => T & InstanceType<typeof traits[number]> => {
     const resolve = settings.resolve || [];
     const showWarnings = settings.showWarnings || false;
@@ -46,20 +56,16 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
         traits.forEach((Trait) => {
             const traitName = Trait.name;
             const traitMethods = Object.getOwnPropertyNames(Trait.prototype);
-
             const traitMethodsDescriptors = Object.getOwnPropertyDescriptors(Trait.prototype);
-            Object.keys(traitMethodsDescriptors).forEach((methodName) => {
-                const descriptor = traitMethodsDescriptors[methodName];
-                if (descriptor.value) {
-                    console.log(methodName, descriptor.value.toString());
-                }
-            });
-            console.log('--------------------------------');
 
             traitMethods.forEach((traitMethodName) => {
                 if (traitMethodName === 'constructor') return;
 
                 const currentClassHasMethod = hasOwnProperty(Base, traitMethodName, false);
+                const descriptor = traitMethodsDescriptors[traitMethodName];
+
+                getMethodInfo(descriptor.value.toString());
+                console.log('--------------------------------');
 
                 // La prioridad es Clase actual > Trait > Clase base, es decir, si la clase actual tiene el método, no se aplica el trait.
                 // Por otro lado debemos comprobar que el método no se haya aplicado ya desde otro trait para evitar falsos positivos.

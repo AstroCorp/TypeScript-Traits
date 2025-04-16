@@ -10,7 +10,7 @@ experimentalDecorators, emitDecoratorMetadata.
 
 - Prioridad si la función tiene el mismo nombre: Clase actual > Trait > Clase base
 - Si 2 traits crean una misma función da error fatal, tenemos que indicar cual usar
-- Al importar un trait podemos modificar la visibilidad del método, parecido a lo anterior
+- Al importar un trait podemos modificar la visibilidad del método, parecido a lo anterior (Por limitaciones de js todos los métodos de un trait son públicos)
 - Podemos crear un trait fusionando otros traits
 - Los traits puede tener un método abstract (No se puede aplicar en js, ya que no existe el concepto de abstract en js)
 - Los traits pueden tener métodos y variables estáticas
