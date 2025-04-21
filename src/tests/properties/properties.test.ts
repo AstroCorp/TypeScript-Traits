@@ -1,3 +1,5 @@
+import Properties from "./classes/Properties";
+
 describe.skip('Properties in Traits', () => {
     test('should not allow redefining trait property with different visibility', () => {
         // TODO: Implement test
