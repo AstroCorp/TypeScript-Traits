@@ -1,5 +1,5 @@
 class PropertiesFile {
-    #filename: string;
+    #filename?: string;
 
     getFilename() {
         return this.#filename;
@@ -13,7 +13,7 @@ class PropertiesFile {
         this.#filename = filename;
     }
 
-    get filename() {
+    get filename(): string | undefined {
         return this.#filename;
     }
 }

@@ -64,6 +64,9 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
                 const currentClassHasMethod = hasOwnProperty(Base, traitMethodName, false);
                 const descriptor = traitMethodsDescriptors[traitMethodName];
 
+                // Si el descriptor no tiene value, no es un método, es una propiedad.
+                if (!descriptor.value) return;
+
                 getMethodInfo(descriptor.value.toString());
                 console.log('--------------------------------');
 
