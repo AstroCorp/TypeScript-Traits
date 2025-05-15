@@ -37,12 +37,16 @@ const validateResolve = (resolve: Array<ResolveInsteadOf | ResolveAs>) => {
 
 const getMethodInfo = (descriptorValue: string) => {
     const methodSignature = descriptorValue.slice(0, descriptorValue.indexOf(')') + 1);
+    const methodName = methodSignature.slice(0, methodSignature.indexOf('(')).trim();
     const params = methodSignature.slice(methodSignature.indexOf('(') + 1, methodSignature.indexOf(')'))
         .split(',')
         .map((param) => param.trim())
         .filter((param) => param.length > 0);
 
-    console.log(methodSignature, params);
+    return { 
+        methodName,
+        params,
+    };
 }
 
 const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: Constructor[]): <T extends TBase>(Base: T) => T & InstanceType<typeof traits[number]> => {
