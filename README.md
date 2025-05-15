@@ -14,7 +14,7 @@ experimentalDecorators, emitDecoratorMetadata.
 - Podemos crear un trait fusionando otros traits
 - Los traits puede tener un método abstract (No se puede aplicar en js, ya que no existe el concepto de abstract en js)
 - Los traits pueden tener métodos y variables estáticas (No es posible por limitaciones de js)
-- Si un trait define una propiedad, una clase no puede definir una propiedad con el mismo nombre, a menos que sea compatible (misma visibilidad y mismo valor inicial), si no, se emitirá un error fatal.
+- Si un trait define una propiedad, una clase no puede definir una propiedad con el mismo nombre, a menos que sea compatible (misma visibilidad y mismo valor inicial), si no, se emitirá un error fatal. (No se puede aplicar en js, ya que no tenemos visibilidad real y acceso a las propiedades de las clases)
 
 # Commands
 
