@@ -67,12 +67,9 @@ const ApplyTraits = <TBase extends Constructor>(settings: Settings, ...traits: C
 
                 const currentClassHasMethod = hasOwnProperty(Base, traitMethodName, false);
                 const descriptor = traitMethodsDescriptors[traitMethodName];
-
-                // Si el descriptor no tiene value, no es un método, es una propiedad.
+                
+                // Si el descriptor no tiene value, no es un método, es un setter o un getter.
                 if (!descriptor.value) return;
-
-                getMethodInfo(descriptor.value.toString());
-                console.log('--------------------------------');
 
                 // La prioridad es Clase actual > Trait > Clase base, es decir, si la clase actual tiene el método, no se aplica el trait.
                 // Por otro lado debemos comprobar que el método no se haya aplicado ya desde otro trait para evitar falsos positivos.
